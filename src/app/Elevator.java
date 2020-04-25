@@ -3,44 +3,26 @@ package app;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class OldElevator {
+abstract class Elevator {
     int _maxFloors;
     int _maxCapacity;
     int _currentFloor = 0;
     boolean _isGoingUp = true;
     int _distance = 0;
+    ArrayList<Person> _PeopleWaiting;
     ArrayList<Person> _PeopleInLift;
 
-    OldElevator(int iMaxCapacity, int iMaxFloors){
+    Elevator(int iMaxCapacity, int iMaxFloors, ArrayList<Person> iPeopleWaiting){
+        _PeopleWaiting = iPeopleWaiting;
         _PeopleInLift = new ArrayList<Person>(); 
         _maxCapacity =  iMaxCapacity;
         _maxFloors = iMaxFloors;
     }
 
-    void move(){
-        if (_currentFloor < _maxFloors && _isGoingUp) {          
-          _currentFloor += 1;         
-        //   System.out.println("Move up to floor:" + _currentFloor); 
-        }
+    public abstract void move();
 
-        if (_currentFloor > 0 && !_isGoingUp) {
-            _currentFloor -= 1;
-            // System.out.println("Move down to floor:" + _currentFloor); 
-        }
-
-        if (_currentFloor == _maxFloors) {
-            _isGoingUp = false;            
-        }
-
-        if (_currentFloor == 0) {
-            _isGoingUp = true;
-        }
-
-        _distance += 1;
-    }
-
-    boolean isPeopleHaveValidDestination(final ArrayList<Person> iPeopleWaiting){
-        Iterator<Person> aWaiting = iPeopleWaiting.iterator();
+    boolean isPeopleHaveValidDestination(){
+        Iterator<Person> aWaiting = _PeopleWaiting.iterator();
         while (aWaiting.hasNext()) {
           Person aPerson = aWaiting.next();
           if (aPerson.destination > _maxFloors || aPerson.destination < 0 ){
@@ -61,8 +43,8 @@ public class OldElevator {
         }
     }
 
-    void addPeopleStartingAtThisFloor(final ArrayList<Person> iPeopleWaiting){
-        Iterator<Person> aWaiting = iPeopleWaiting.iterator();
+    void addPeopleStartingAtThisFloor(){
+        Iterator<Person> aWaiting = _PeopleWaiting.iterator();
         while (aWaiting.hasNext()) {
             Person aPerson = aWaiting.next();
             if ((aPerson.start == _currentFloor) &&
@@ -70,8 +52,9 @@ public class OldElevator {
             {     
                 //People only enter the lift if going in the right direction
                 if ((aPerson.destination > _currentFloor && _isGoingUp) ||
-                   (aPerson.destination < _currentFloor && !_isGoingUp))
+                   (aPerson.destination < _currentFloor && !_isGoingUp) )
                 {
+                  System.out.println("Person going to floor [" + aPerson.destination + "] gets in the lift");
                   _PeopleInLift.add(aPerson);                
                   aWaiting.remove();                
                 }
@@ -80,16 +63,30 @@ public class OldElevator {
 
     }
 
-    int getDistance(final ArrayList<Person> iPeopleWaiting) {
-        if (!isPeopleHaveValidDestination(iPeopleWaiting)){
+    boolean isGoUpAtExtremities(){
+        if (_currentFloor == _maxFloors) {
+            System.out.println("Change direction to go down"); 
+            return false;            
+        }
+
+        if (_currentFloor == 0) {
+            System.out.println("Change direction to go up");
+            return true;
+        }
+
+        return _isGoingUp; // no change
+    }
+
+    int getDistance() {
+        if (!isPeopleHaveValidDestination()){
             System.out.println("ABORT!!"); 
             return 0;
         }
 
-        while ((iPeopleWaiting.size() > 0) || (_PeopleInLift.size() > 0)){
+        while ((_PeopleWaiting.size() > 0) || (_PeopleInLift.size() > 0)){
             removePeopleArrivedAtDestination();
-            addPeopleStartingAtThisFloor(iPeopleWaiting);            
-            if ((iPeopleWaiting.size() > 0) || (_PeopleInLift.size() > 0)){
+            addPeopleStartingAtThisFloor();            
+            if ((_PeopleWaiting.size() > 0) || (_PeopleInLift.size() > 0)){
               move();
             }
         }     
