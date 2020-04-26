@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 class ElevatorTest {
     
-    ArrayList<Person> _peopleWaiting = new ArrayList<Person>();
+    PeopleWaiting _peopleWaiting = new PeopleWaiting();
 
     int getDestinationDifferentFromStart(int aMaxFloors, int start){
         int uniqueDestination =  (int) (Math.random() * (aMaxFloors));
@@ -101,12 +101,12 @@ class ElevatorTest {
         
         int aOverallAverageForServant = 0;
         int aOverallAverageForMechanical = 0;
-        int aNumberOfExecutions = 100;
+        int aNumberOfExecutions = 1;
         int aMaxFloors = 10;
                          
         for(int j=0; j<aNumberOfExecutions ; j++){
-            ArrayList<Person> aPeopleWaitingForServant = new ArrayList<Person>();
-            ArrayList<Person> aPeopleWaitingForMechanical = new ArrayList<Person>();
+            PeopleWaiting aPeopleWaitingForServant = new PeopleWaiting();
+            PeopleWaiting aPeopleWaitingForMechanical = new PeopleWaiting();
             Elevator aServantElevator = new ServantElevator(10,aMaxFloors,aPeopleWaitingForServant);
             Elevator aMechanicalElevator = new MechanicalElevator(10,aMaxFloors,aPeopleWaitingForMechanical);
 
@@ -151,6 +151,8 @@ class ElevatorTest {
         ServantElevator aElevator = new ServantElevator(10,10,_peopleWaiting);   
         assertEquals(2, aElevator.getDistance());
     }
+
+
 
 
 }

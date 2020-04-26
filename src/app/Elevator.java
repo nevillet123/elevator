@@ -9,17 +9,18 @@ abstract class Elevator {
     int _currentFloor = 0;
     boolean _isGoingUp = true;
     int _distance = 0;
-    ArrayList<Person> _PeopleWaiting;
-    ArrayList<Person> _PeopleInLift;
+    PeopleWaiting _PeopleWaiting;
+    PeopleInLift _PeopleInLift;
 
-    Elevator(int iMaxCapacity, int iMaxFloors, ArrayList<Person> iPeopleWaiting){
+    Elevator(int iMaxCapacity, int iMaxFloors, PeopleWaiting iPeopleWaiting){
         _PeopleWaiting = iPeopleWaiting;
-        _PeopleInLift = new ArrayList<Person>(); 
+        _PeopleInLift = new PeopleInLift(); 
         _maxCapacity =  iMaxCapacity;
         _maxFloors = iMaxFloors;
     }
 
     public abstract void move();
+    public abstract String getMyElevatorName();
 
     boolean isPeopleHaveValidDestination(){
         Iterator<Person> aWaiting = _PeopleWaiting.iterator();
@@ -54,7 +55,7 @@ abstract class Elevator {
                 if ((aPerson.destination > _currentFloor && _isGoingUp) ||
                    (aPerson.destination < _currentFloor && !_isGoingUp) )
                 {
-                  System.out.println("Person going to floor [" + aPerson.destination + "] gets in the lift");
+                //   System.out.println("Person going to floor [" + aPerson.destination + "] gets in the lift");
                   _PeopleInLift.add(aPerson);                
                   aWaiting.remove();                
                 }
@@ -77,6 +78,20 @@ abstract class Elevator {
         return _isGoingUp; // no change
     }
 
+    void displayState(){
+        System.out.println("####################### - " + getMyElevatorName() + " - #################");
+        for (int i=_maxFloors; i >=0 ;i--){
+
+            String aLineToDisplay = new String(_PeopleWaiting.toDisplayString(i)); 
+            if (_currentFloor == i){
+                aLineToDisplay += "                 " + _PeopleInLift.toDisplayString(i,_isGoingUp);
+            }
+            System.out.println(aLineToDisplay);
+        }
+        System.out.println("#########################################################################");
+
+    }
+
     int getDistance() {
         if (!isPeopleHaveValidDestination()){
             System.out.println("ABORT!!"); 
@@ -89,7 +104,12 @@ abstract class Elevator {
             if ((_PeopleWaiting.size() > 0) || (_PeopleInLift.size() > 0)){
               move();
             }
+        
+            displayState();
+
         }     
+
+
 
         return _distance;
     }

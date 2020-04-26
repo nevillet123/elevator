@@ -5,8 +5,12 @@ import java.util.Iterator;
 
 public class DemocraticElevator extends Elevator {
 
-    DemocraticElevator(int iMaxCapacity, int iMaxFloors, ArrayList<Person> iPeopleWaiting){
+    DemocraticElevator(int iMaxCapacity, int iMaxFloors, PeopleWaiting iPeopleWaiting){
         super(iMaxCapacity, iMaxFloors, iPeopleWaiting);
+    }
+
+    public String getMyElevatorName(){
+        return "Democratic Elevator";
     }
 
     public void move(){
