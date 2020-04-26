@@ -9,6 +9,7 @@ abstract class Elevator {
     int _currentFloor = 0;
     boolean _isGoingUp = true;
     int _distance = 0;
+
     PeopleWaiting _PeopleWaiting;
     PeopleInLift _PeopleInLift;
 
@@ -64,6 +65,20 @@ abstract class Elevator {
 
     }
 
+    void commonMove(){
+        if (_currentFloor < _maxFloors && _isGoingUp) {          
+            _currentFloor += 1; 
+            _distance += 1;        
+        //   System.out.println("Move up to floor:" + _currentFloor); 
+        }
+
+        if (_currentFloor > 0 && !_isGoingUp) {
+            _currentFloor -= 1;
+            _distance += 1;
+            // System.out.println("Move down to floor:" + _currentFloor); 
+        }
+    }
+
     boolean isGoUpAtExtremities(){
         if (_currentFloor == _maxFloors) {
             System.out.println("Change direction to go down"); 
@@ -98,18 +113,27 @@ abstract class Elevator {
             return 0;
         }
 
-        while ((_PeopleWaiting.size() > 0) || (_PeopleInLift.size() > 0)){
+        int aSafetyCount = 0;
+        int aMaxToAvoidInfiniteLoop = 100;
+        
+        while ((_PeopleWaiting.size() > 0) ||
+               (_PeopleInLift.size() > 0)  &&
+               (aSafetyCount < aMaxToAvoidInfiniteLoop)
+              ){
             removePeopleArrivedAtDestination();
             addPeopleStartingAtThisFloor();            
             if ((_PeopleWaiting.size() > 0) || (_PeopleInLift.size() > 0)){
               move();
             }
-        
+
             displayState();
 
-        }     
-
-
+            aSafetyCount++;
+        }
+        
+        if (aSafetyCount >= aMaxToAvoidInfiniteLoop){
+            System.out.println("ABORT!!   possible infinite loop distance [" + _distance + "]"); 
+        } 
 
         return _distance;
     }

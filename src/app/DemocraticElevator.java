@@ -22,7 +22,7 @@ public class DemocraticElevator extends Elevator {
             Person aPerson = aInLift.next();
             if (aPerson.destination > _currentFloor){
                 wantsToGoUp++;            
-            }else{
+            } else {
                 wantsToGoDown++;
             } 
         }
@@ -36,6 +36,7 @@ public class DemocraticElevator extends Elevator {
             _isGoingUp = false;
         }
 
+        commonMove();
         _isGoingUp = isGoUpAtExtremities();
         _distance += 1;
     }

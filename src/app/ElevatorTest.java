@@ -135,14 +135,14 @@ class ElevatorTest {
     }
 
 
-    // @Test
-    // void shouldGoUpIfMorePeopleWantToGoUp() {   
-    //     _peopleWaiting.add(new Person(1,0));
-    //     _peopleWaiting.add(new Person(1,2));
-    //     _peopleWaiting.add(new Person(1,2));
-    //     DemocraticElevator aElevator = new DemocraticElevator(10,2,_peopleWaiting);  
-    //     assertEquals(4, aElevator.getDistance());
-    // }
+    @Test
+    void shouldGoUpIfMorePeopleWantToGoUp() {   
+        _peopleWaiting.add(new Person(1,0));
+        _peopleWaiting.add(new Person(1,2));
+        _peopleWaiting.add(new Person(1,2));
+        DemocraticElevator aElevator = new DemocraticElevator(10,2,_peopleWaiting);  
+        assertEquals(8, aElevator.getDistance());
+    }
 
     
     @Test
