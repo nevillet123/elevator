@@ -99,37 +99,37 @@ class ElevatorTest {
     @Test
     void shouldGetAverageForRamdomTest() { 
         
-        int aOverallAverageForServant = 0;
+        int aOverallAverageForMinMax = 0;
         int aOverallAverageForMechanical = 0;
-        int aNumberOfExecutions = 1;
-        int aMaxFloors = 10;
+        int aNumberOfExecutions = 50;
+        int aMaxFloors = 5;
                          
         for(int j=0; j<aNumberOfExecutions ; j++){
-            PeopleWaiting aPeopleWaitingForServant = new PeopleWaiting();
+            PeopleWaiting aPeopleWaitingForMinMax = new PeopleWaiting();
             PeopleWaiting aPeopleWaitingForMechanical = new PeopleWaiting();
-            Elevator aServantElevator = new ServantElevator(10,aMaxFloors,aPeopleWaitingForServant);
+            Elevator aMinMaxElevator = new MinMaxElevator(10,aMaxFloors,aPeopleWaitingForMinMax);
             Elevator aMechanicalElevator = new MechanicalElevator(10,aMaxFloors,aPeopleWaitingForMechanical);
 
             int aNumberOfPeopleWaiting = 10;
             for(int i=0; i<aNumberOfPeopleWaiting ; i++){
                 int aStart = (int) (Math.random() * (aMaxFloors));
                 int aDestination = getDestinationDifferentFromStart(aMaxFloors,aStart);
-                aPeopleWaitingForServant.add(new Person(aStart,aDestination));
+                aPeopleWaitingForMinMax.add(new Person(aStart,aDestination));
                 aPeopleWaitingForMechanical.add(new Person(aStart,aDestination));
             }    
-            int aDistanceForServant = aServantElevator.getDistance();
+            int aDistanceForMinMax = aMinMaxElevator.getDistance();
             int aDistanceForMechanical = aMechanicalElevator.getDistance();
-            System.out.println("Total Distance  [" + j + "]  for the servant lift is " + aDistanceForServant);
+            System.out.println("Total Distance  [" + j + "]  for the minmax lift is " + aDistanceForMinMax);
             System.out.println("Total Distance  [" + j + "]  for the mechanical lift is " + aDistanceForMechanical);
             
-            aOverallAverageForServant += aDistanceForServant;
+            aOverallAverageForMinMax += aDistanceForMinMax;
             aOverallAverageForMechanical += aDistanceForMechanical;
         }
 
-        aOverallAverageForServant = (int) aOverallAverageForServant / aNumberOfExecutions;
+        aOverallAverageForMinMax = (int) aOverallAverageForMinMax / aNumberOfExecutions;
         aOverallAverageForMechanical = (int) aOverallAverageForMechanical / aNumberOfExecutions;
 
-        System.out.println("Average Distance for Servant after [" + aNumberOfExecutions + "] executions [" + aOverallAverageForServant + "]" );
+        System.out.println("Average Distance for MinMax after [" + aNumberOfExecutions + "] executions [" + aOverallAverageForMinMax + "]" );
         System.out.println("Average Distance for Mechanical after [" + aNumberOfExecutions + "] executions [" + aOverallAverageForMechanical + "]" );
 
     }
@@ -149,6 +149,14 @@ class ElevatorTest {
     void testIdea() {   
         _peopleWaiting.add(new Person(1,0));
         ServantElevator aElevator = new ServantElevator(10,10,_peopleWaiting);   
+        assertEquals(2, aElevator.getDistance());
+    }
+
+    @Test
+    void MinMaxtestToSeeIfItsWorking() {   
+        _peopleWaiting.add(new Person(2,4));
+        _peopleWaiting.add(new Person(4,3));
+        Elevator aElevator = new MinMaxElevator(10,5,_peopleWaiting);   
         assertEquals(2, aElevator.getDistance());
     }
 
